@@ -18,7 +18,32 @@ hpi=Hours post infection, abs=absorbance at 600nm
 | ——–      | ——–      | ———-       | ———-       | ——-     | ———       | ——–       |
 | 2        | 0.4      | 0.3        | 0.35       | 0.1     | 0.03      | 0.02      |
 
-#### This is the code to make a multi line graph fitted to the Gompertz growth model. You can insert more lines as needed to get more than three lines on the graph.
+**Example Data Below**
+
+``` r
+datafile <- read_excel(Your Data File Here)#put your final data excel sheet here
+datafile
+```
+
+    ## # A tibble: 16 × 7
+    ##    time.hpi ctrl.abs ctrl.sd virus1.abs virus1.sd virus2.abs virus2.sd
+    ##       <dbl>    <dbl>   <dbl>      <dbl>     <dbl>      <dbl>     <dbl>
+    ##  1        1     0.15    0.02       0.1       0.02       0.13      0.02
+    ##  2        2     0.3     0.02       0.18      0.02       0.25      0.02
+    ##  3        3     0.45    0.02       0.3       0.02       0.4       0.02
+    ##  4        4     0.58    0.02       0.45      0.02       0.55      0.02
+    ##  5        5     0.72    0.02       0.49      0.02       0.67      0.02
+    ##  6        6     0.75    0.02       0.52      0.02       0.7       0.02
+    ##  7        7     0.8     0.02       0.52      0.02       0.72      0.02
+    ##  8        8     0.81    0.02       0.54      0.02       0.72      0.02
+    ##  9        9     0.82    0.02       0.53      0.02       0.72      0.02
+    ## 10       10     0.82    0.02       0.54      0.02       0.72      0.02
+    ## 11       11     0.82    0.02       0.56      0.02       0.72      0.02
+    ## 12       12     0.82    0.02       0.54      0.02       0.71      0.02
+    ## 13       13     0.81    0.02       0.53      0.02       0.71      0.02
+    ## 14       14     0.81    0.02       0.53      0.02       0.71      0.02
+    ## 15       15     0.81    0.02       0.53      0.02       0.71      0.02
+    ## 16       16     0.8     0.02       0.53      0.02       0.71      0.02
 
 ## Load necessary libraries
 
@@ -91,77 +116,8 @@ library(growthcurve)
 library(readxl)
 ```
 
-``` r
-datafile <- read_excel("C:/Users/Elijah Christenson/Documents/GitHub/Stacy-Ceballos-Index/testing.xlsx")
-datafile
-```
 
-    ## # A tibble: 16 × 7
-    ##    time.hpi ctrl.abs ctrl.sd virus1.abs virus1.sd virus2.abs virus2.sd
-    ##       <dbl>    <dbl>   <dbl>      <dbl>     <dbl>      <dbl>     <dbl>
-    ##  1        1     0.15    0.02       0.1       0.02       0.13      0.02
-    ##  2        2     0.3     0.02       0.18      0.02       0.25      0.02
-    ##  3        3     0.45    0.02       0.3       0.02       0.4       0.02
-    ##  4        4     0.58    0.02       0.45      0.02       0.55      0.02
-    ##  5        5     0.72    0.02       0.49      0.02       0.67      0.02
-    ##  6        6     0.75    0.02       0.52      0.02       0.7       0.02
-    ##  7        7     0.8     0.02       0.52      0.02       0.72      0.02
-    ##  8        8     0.81    0.02       0.54      0.02       0.72      0.02
-    ##  9        9     0.82    0.02       0.53      0.02       0.72      0.02
-    ## 10       10     0.82    0.02       0.54      0.02       0.72      0.02
-    ## 11       11     0.82    0.02       0.56      0.02       0.72      0.02
-    ## 12       12     0.82    0.02       0.54      0.02       0.71      0.02
-    ## 13       13     0.81    0.02       0.53      0.02       0.71      0.02
-    ## 14       14     0.81    0.02       0.53      0.02       0.71      0.02
-    ## 15       15     0.81    0.02       0.53      0.02       0.71      0.02
-    ## 16       16     0.8     0.02       0.53      0.02       0.71      0.02
 
-### The following produces a fitted Gompertz graph
-
-    Be sure to change all data names, x, and y values to your file and column names.
-
-``` r
-#3line with fitted gompertz curve, put in your own data name right after ggplot(), as well as column labels, ex OD,OD2. Load above packages.
-
-ggplot(datafile,aes(x = time.hpi)) +
-theme_light(base_size = 10)+  
-geom_point(aes(y = ctrl.abs), color = "darkred") + #copy to add more datasets
-  geom_point(aes(y = virus1.abs), color="steelblue")+
-  geom_point(aes(y = virus2.abs), color="green")+
-  geom_errorbar(aes(ymin=ctrl.abs-ctrl.sd, ymax=ctrl.abs+ctrl.sd),
-                color="darkred", width=.1)+
-  geom_errorbar(aes(ymin=virus1.abs-virus1.sd, ymax=virus1.abs+virus1.sd),
-                color="steelblue", width=.1)+ #copy geom_errorbar to add data
-  geom_errorbar(aes(ymin=virus2.abs-virus2.sd, ymax=virus2.abs+virus2.sd),
-                color="green", width=.1)+
- #fits to curves and adds color
-stat_growthcurve(aes(y=ctrl.abs,color="darkred"), model= "gompertz", 
-                 size=1.75)+    #copy this line as well to add more datasets
-stat_growthcurve(aes(y=virus1.abs, color="steelblue"), model= "gompertz", 
-                 size=1.75)+ #change argument from "gompertz" to "logistic" for logarithmic model 
-stat_growthcurve(aes(y=virus2.abs,color="green"), model= "gompertz",  
-                 size=1.75)+
-
-labs(x="Hours post-infection (hpi)", y="Absorbance (OD 600nm)")+ #axis labels
-ggtitle("Gompertz Test 1")+ #main title
-scale_color_identity(name = "",
-                       breaks = c("darkred", "steelblue", "green"),
-                       labels = c("ctrl", "virus2", "virus3"),
-                       guide = "legend")+ #builds legend 
- theme(legend.position = c(0.75,0.35))+ #puts legend in correct location, can play with values to get a spot you like
- expand_limits(x=c(0,16), y=c(0, 0.9)) #for scaling
-```
-
-![](Virus-Graph-and-Isc-Code-Elijah-Christenson-Final_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
-
-``` r
-#to run this just select all and click run
-```
-
-## Calculates I<sub>SC</sub>, as well as AUC and other necessary values to achieve I<sub>SC</sub>
-
-This loads necessary packages and finds N<sub>asymptote</sub> for both
-control and infected
 
 ``` r
 if(!require("tidyverse")) install.packages("tidyverse")
@@ -219,6 +175,8 @@ library("knitr")
 library("here")
 ```
 
+## The following finds max values and labels them 
+
 ``` r
 #the following finds asymptotes
 con_abs=datafile[c("ctrl.abs")] #change to specify column
@@ -227,8 +185,7 @@ inf_abs=datafile[c("virus1.abs")] #change to specify column
 Nasyminf <- max(inf_abs) #pick max value from specified column
 ```
 
-## To calculate PI<sub>max</sub>, I<sub>SC</sub>, and PI<sub>AUC</sub>
-
+## To calculate PIMAX, ISC, and PIAUC
 Using the equations below from “Quantifying relative virulence”,
 <https://doi.org/10.1099/jgv.0.001515>
 
@@ -248,7 +205,7 @@ IscTest=(PIAUC*PIMAX)^(0.5) #calculates Isc
 
 ### Code to make graph with asymptotes and shading
 
-    This helps to better visualize the I~SC~ and AUC
+    This helps to better visualize the ISC and AUC
 
 ``` r
 ggplot(datafile, aes(x=time.hpi)) + 
@@ -264,7 +221,7 @@ ggplot(datafile, aes(x=time.hpi)) +
   geom_vline(xintercept= 11, linetype= "solid", color= "black", size=0.75)+ 
 #this is a line that should intersect at the time point with the highest absorbance value on the control
   
-  geom_hline(yintercept= Nasymcon, linetype= "dashed", color= "darkred", size=0.70)+ #Horizontal lines, intersect curve at highest absorbance value
+  geom_hline(yintercept= Nasymcon, linetype= "dashed", color= "darkred", size=0.70)+ #Horizontal lines, intersect curve at highest absorbance value, adjust manually
   geom_hline(yintercept= Nasyminf, linetype= "dashed", color= "steelblue", size=0.70)+
   annotate("text", x = 2.2, y = 0.56, label = "N[asymptote]", vjust = -0.5)+ #dashed line labels, adjust to where you want it on graph
   
