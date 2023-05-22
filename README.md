@@ -4,4 +4,4 @@ Using the equations from "Quantifying relative virulence", https://doi.org/10.10
 
 Use the file "testing.xlsx" to format your data for R. 
 
-Use the file "Virus Graphs and ISC Code Elijah Christenson Final" to make graphs and obtain I_{SC}, AUC, AUCinfected, PIAUC, and PIMAX
+Use the file "Virus Graphs and ISC Code Elijah Christenson Final" to make graphs and obtain I$_{SC}$, AUC, AUCinfected, PIAUC, and PIMAX
